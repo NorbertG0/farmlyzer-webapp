@@ -2,9 +2,9 @@
 
 ***Live demo: [link](https://farmlyzer.pl/)***
 
-### A responsive web application for streamlined crop documentation, deployed on a OVH VPS, containerized and orchestrated using MicroK8s.
+***Stack: Django • Bootstrap • HTML • CSS • Selenium • JMeter • pytest • Docker • MicroK8s***
 
-**Stack:** Django • Bootstrap • HTML • CSS • Selenium • JMeter • pytest • Docker • MicroK8s
+### A responsive web application for streamlined crop documentation, deployed on a OVH VPS, containerized and orchestrated using MicroK8s.
 
 ---
 
