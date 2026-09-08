@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farmlyzer</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Style -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'favicon.svg' %}">
+</head>
+
+ <body class="animate__animated animate__fadeIn">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><img src="{% static 'logo_svg.svg' %}" alt="Farmlyzer Logo" width="25" height="25" class="me-2">Farmlyzer</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><i class="bi bi-box-arrow-left me-2"></i>Wyloguj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'user' %}"><i class="bi bi-person me-2"></i>{{ user.username }}</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}"><i class="bi bi-person-plus me-2"></i>Zarejestruj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right me-2"></i>Zaloguj się</a>
+              </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- MAIN -->
+ <main class="flex-grow-1">
+
+    <!-- MAIN CONTENT FOR DESKTOP -->
+    <div class="main-content animate__animated animate__zoomIn d-none d-md-block pt-5 pb-5">
+
+      <!-- TOP PANEL -->
+      <div class="container main-card p-4" >
+      <div class="row align-items-center">
+
+        <!-- LEFT COLUMN: TEXT -->
+        <div class="col-md-6">
+          <h1>Witaj w Farmlyzer!</h1>
+          <p style="text-align: justify;">Farmlyzer to nowoczesna aplikacja stworzona z myślą o rolnikach, którzy chcą w prosty i przejrzysty sposób zarządzać swoimi uprawami.
+              Dzięki niej zyskujesz dostęp do wszystkich danych o polach, plonach i zabiegach w jednym miejscu. Monitoruj pogodę, zapisuj prace polowe, analizuj statystyki i porównuj wyniki z poprzednich sezonów.
+              Rolnictwo staje się prostsze, gdy masz pełną kontrolę zawsze pod ręką.</p>
+          <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+          <br>
+          <h2>Jak to działa?</h2>
+          <p style="text-align: justify;">Na początku dodajesz informacje o swoich polach – określasz ich powierzchnię, rodzaj upraw oraz szczegóły dotyczące gleby.
+              Następnie zapisujesz wszystkie prace polowe, takie jak nawożenie, opryski czy zbiór plonów. Aplikacja automatycznie gromadzi te dane i przedstawia je w formie czytelnych wykresów i statystyk, dzięki czemu możesz szybko analizować wyniki, porównywać sezony i planować kolejne działania.
+          </p>
+        </div>
+
+        <!-- RIGHT COLUMN: IMAGE -->
+        <div class="col-md-6 text-center animate__animated animate__zoomIn">
+          <img src="{% static 'crops.jpg' %}" alt="Uprawy" class="img-fluid rounded shadow-sm">
+        </div>
+      </div>
+    </div>
+    </div>
+
+      <!-- IMAGE CARDS -->
+      <div class="container pt-2 pb-4 d-none d-md-block">
+        <div class="row g-4">
+
+          <!-- CARD 1 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-100 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_crops_ss.jpg' %}" class="card-img-top" alt="Uprawy">
+              <div class="card-body text-center">
+                <h5 class="card-title">Uprawy</h5>
+                <p class="card-text">Monitoruj i zarządzaj swoimi uprawami w jednym miejscu. Dodawaj pola, zapisuj prace i zbiory, a także śledź historię plonów, by lepiej planować kolejne sezony.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-100 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_weather_ss.jpg' %}" class="card-img-top" alt="Pogoda">
+              <div class="card-body text-center">
+                <h5 class="card-title">Pogoda</h5>
+                <p class="card-text">Bądź zawsze na bieżąco z warunkami atmosferycznymi. Sprawdzaj pogodę dla swojej lokalizacji oraz zapisuj pomiary temperatury i opadów, aby lepiej reagować na zmiany pogody.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-100 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_stats_ss.jpg' %}" class="card-img-top" alt="Statystyki">
+              <div class="card-body text-center">
+                <h5 class="card-title">Statystyki</h5>
+                <p class="card-text">Analizuj swoje dane rolnicze w przejrzysty sposób. Twórz wykresy, porównuj wyniki i odkrywaj trendy, które pomogą Ci zwiększyć wydajność gospodarstwa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- MIDDLE PANEL -->
+    <div class="main-content animate__animated animate__zoomIn d-none d-md-block">
+      <div class="container main-card p-4">
+          <div class="row align-items-center">
+                <!-- LEFT COLUMN: TEXT -->
+                <div class="col-md-6">
+                  <h1>Działaj efektywniej!</h1>
+                  <p style="text-align: justify;">Zwiększ wydajność swojego gospodarstwa dzięki Farmlyzer. Wszystkie dane o polach, uprawach i pracach polowych masz zawsze pod ręką – szybko analizujesz wyniki, planujesz kolejne działania i podejmujesz trafniejsze decyzje.
+                      Oszczędzaj czas i pieniądze, optymalizując procesy w swoim gospodarstwie dzięki przejrzystym raportom oraz statystykom dostosowanym do Twoich potrzeb.</p>
+                  <div class="card-body text-center d-flex justify-content-center">
+                      <a class="btn btn-primary mb-4 me-2" href="{% url 'dashboard' %}">Zaczynajmy!</a>
+                  </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE -->
+                <div class="col-md-6 text-center animate__animated animate__zoomIn">
+                  <img src="{% static 'analyze.jpg' %}" alt="Uprawy" class="img-fluid rounded shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- BOTTOM PANEL -->
+    <div class="main-content animate__animated animate__zoomIn d-none d-md-block">
+      <div class="container main-card p-4">
+          <div class="row align-items-center">
+                <!-- LEFT COLUMN: TEXT -->
+                <div class="col-md-6">
+                  <h1>Magia responsywności!</h1>
+                  <p style="text-align: justify;">Nasza aplikacja przystosowana jest do korzystania również na urządzeniach mobilnych.</p>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE -->
+                <div class="col-md-6 text-center animate__animated animate__zoomIn">
+                  <img src="{% static 'iphone_template.png' %}" alt="Uprawy" class="img-fluid rounded w-50">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- MAIN CONTENT FOR PHONES -->
+    <div class="main-content animate__animated animate__zoomIn d-md-none">
+      <div class="container-fluid main-card p-4">
+          <div class="row align-items-center">
+            <!-- LEFT COLUMN: TEXT -->
+            <div class="col-md-6">
+              <h1>Witaj w Farmlyzer!</h1>
+              <p style="text-align: justify;">Farmlyzer to nowoczesna aplikacja stworzona z myślą o rolnikach, którzy chcą w prosty i przejrzysty sposób zarządzać swoimi uprawami.
+                  Dzięki niej zyskujesz dostęp do wszystkich danych o polach, plonach i zabiegach w jednym miejscu. Monitoruj pogodę, zapisuj prace polowe, analizuj statystyki i porównuj wyniki z poprzednich sezonów.
+                  Rolnictwo staje się prostsze, gdy masz pełną kontrolę zawsze pod ręką.</p>
+              <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+              <br>
+              <h2>Jak to działa?</h2>
+              <p style="text-align: justify;">Na początku dodajesz informacje o swoich polach – określasz ich powierzchnię, rodzaj upraw oraz szczegóły dotyczące gleby.
+                  Następnie zapisujesz wszystkie prace polowe, takie jak nawożenie, opryski czy zbiór plonów. Aplikacja automatycznie gromadzi te dane i przedstawia je w formie czytelnych wykresów i statystyk, dzięki czemu możesz szybko analizować wyniki, porównywać sezony i planować kolejne działania.
+              </p>
+            </div>
+
+            <!-- RIGHT COLUMN: IMAGE -->
+            <div class="col-md-6 text-center animate__animated animate__zoomIn">
+              <img src="{% static 'crops.jpg' %}" alt="Uprawy" class="img-fluid rounded shadow-sm">
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- IMAGE CARDS -->
+    <div class="container-fluid py-2 d-block d-md-none">
+        <div class="row g-4">
+          <!-- CARD 1 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-200 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_crops_ss.jpg' %}" class="card-img-top" alt="Uprawy">
+              <div class="card-body text-center">
+                <h5 class="card-title">Uprawy</h5>
+                <p class="card-text">Monitoruj i zarządzaj swoimi uprawami w jednym miejscu. Dodawaj pola, zapisuj prace i zbiory, a także śledź historię plonów, by lepiej planować kolejne sezony.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-100 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_weather_ss.jpg' %}" class="card-img-top" alt="Pogoda">
+              <div class="card-body text-center">
+                <h5 class="card-title">Pogoda</h5>
+                <p class="card-text">Bądź zawsze na bieżąco z warunkami atmosferycznymi. Sprawdzaj pogodę dla swojej lokalizacji oraz zapisuj pomiary temperatury i opadów, aby lepiej reagować na zmiany pogody.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="col-md-4 card-hover-effect">
+            <div class="card h-100 shadow-sm animate__animated animate__zoomIn">
+              <img src="{% static 'home_stats_ss.jpg' %}" class="card-img-top" alt="Statystyki">
+              <div class="card-body text-center">
+                <h5 class="card-title">Statystyki</h5>
+                <p class="card-text">Analizuj swoje dane rolnicze w przejrzysty sposób. Twórz wykresy, porównuj wyniki i odkrywaj trendy, które pomogą Ci zwiększyć wydajność gospodarstwa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- MIDDLE PANEL -->
+    <div class="main-content animate__animated animate__zoomIn d-md-none">
+      <div class="main-card  p-4">
+          <div class="row align-items-center">
+            <!-- LEFT COLUMN: TEXT -->
+            <div class="col-md-6">
+              <h1>Działaj efektywniej!</h1>
+              <p style="text-align: justify;">Zwiększ wydajność swojego gospodarstwa dzięki Farmlyzer. Wszystkie dane o polach, uprawach i pracach polowych masz zawsze pod ręką – szybko analizujesz wyniki, planujesz kolejne działania i podejmujesz trafniejsze decyzje.
+                  Oszczędzaj czas i pieniądze, optymalizując procesy w swoim gospodarstwie dzięki przejrzystym raportom oraz statystykom dostosowanym do Twoich potrzeb.</p>
+              <div class="card-body text-center d-flex justify-content-center">
+                <a class="btn btn-primary mb-4 me-2" href="{% url 'dashboard' %}">Zaczynajmy!</a>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: IMAGE -->
+            <div class="col-md-6 text-center animate__animated animate__zoomIn">
+              <img src="{% static 'analyze.jpg' %}" alt="Uprawy" class="img-fluid rounded shadow-sm">
+            </div>
+          </div>
+      </div>
+    </div>
+
+
+     <!-- BOTTOM PANEL -->
+    <div class="main-content animate__animated animate__zoomIn d-md-none">
+      <div class="main-card  p-4">
+          <div class="row align-items-center">
+            <!-- LEFT COLUMN: TEXT -->
+                <div class="col-md-6">
+                  <h1>Magia responsywności!</h1>
+                  <p style="text-align: justify;">Nasza aplikacja przystosowana jest do korzystania również na urządzeniach mobilnych.</p>
+                  <div class="card-body text-center d-flex justify-content-center">
+                  </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE -->
+                <div class="col-md-6 text-center animate__animated animate__zoomIn">
+                  <img src="{% static 'iphone_template.png' %}" alt="Uprawy" class="img-fluid rounded w-50">
+                </div>
+          </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white text-center text-muted py-1 sticky-bottom">
+    &copy; 2025 Farmlyzer.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
