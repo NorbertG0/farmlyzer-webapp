@@ -1,0 +1,443 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farmlyzer - statystyki</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Style -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'favicon.svg' %}">
+</head>
+
+<body class="d-flex flex-column min-vh-100 animate__animated animate__fadeIn">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><img src="{% static 'logo_svg.svg' %}" alt="Farmlyzer Logo" width="25" height="25" class="me-2">Farmlyzer</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><i class="bi bi-box-arrow-left me-2"></i>Wyloguj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'user' %}"><i class="bi bi-person me-2"></i>{{ user.username }}</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}"><i class="bi bi-person-plus me-2"></i>Zarejestruj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right me-2"></i>Zaloguj się</a>
+              </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENU BUTTON FOR PHONES -->
+  <button class="btn btn-outline-secondary d-lg-none m-2"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarOffcanvas"
+        aria-controls="sidebarOffcanvas">
+        Menu
+  </button>
+
+  <!-- MIDDLE: SIDEBAR + CARD -->
+  <div class="flex-grow-1 d-flex">
+
+    <!-- SIDEBAR FOR DESKTOP-->
+    <aside class="sidebar bg-white shadow p-3 d-none d-lg-block">
+      <div class="d-grid gap-2">
+          <a href="{% url 'dashboard' %}" class="btn l-mn-btn"><i class="bi bi-house me-2"></i></i>Panel główny</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'stats' %}" class="btn l-mn-btn"><i class="bi bi-graph-up me-2"></i>Statystyki</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'crops' %}" class="btn l-mn-btn"><i class="bi bi-tree me-2"></i>Moje uprawy</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'weather' %}" class="btn l-mn-btn"><i class="bi bi-cloud-sun me-2"></i></i>Pogoda</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'reports' %}" class="btn l-mn-btn"><i class="bi bi-file-bar-graph me-2"></i></i>Raporty</a>
+          <hr class="bg-success my-1">
+      </div>
+    </aside>
+
+      <!-- SIDEBAR FOR PHONES -->
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
+          <div class="offcanvas-header">
+              <h5 class="offcanvas-title">Menu</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+          </div>
+          <div class="offcanvas-body">
+              <div class="d-grid gap-2">
+                  <a href="{% url 'dashboard' %}" class="btn l-mn-btn"><i class="bi bi-house me-2"></i>Panel główny</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'stats' %}" class="btn l-mn-btn"><i class="bi bi-graph-up me-2"></i>Statystyki</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'crops' %}" class="btn l-mn-btn"><i class="bi bi-tree me-2"></i>Moje uprawy</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'weather' %}" class="btn l-mn-btn"><i class="bi bi-cloud-sun me-2"></i>Pogoda</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'reports' %}" class="btn l-mn-btn"><i class="bi bi-file-bar-graph me-2"></i>Raporty</a>
+              </div>
+          </div>
+      </div>
+
+    <!-- MAIN CARD FOR DESKTOP-->
+    <main class="flex-grow-1 mx-3">
+      <div class="main-content d-none d-md-block">
+        <div class="container-fluid main-card-stats">
+          <h1><i class="bi bi-bar-chart me-2 animate__animated animate__zoomIn"></i>Monitoring plonów</h1>
+            <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4" style="background-color: transparent; border: none;">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn" style="background-color: transparent; border: none;" >
+                    <div class="container-fluid">
+                        <div class="row g-3">
+
+                            <!-- FIRST ROW: 2 CARDS -->
+                            <div class="col-md-6">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-tree fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ total_area }} ha</b></div>
+                                            <div class="mini-card-info">Całkowita ilość upraw</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-flower1 fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ total_yields }} t</b></div>
+                                            <div class="mini-card-info">Całkowita ilość zebranych plonów</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECOND ROW: 3 CARDS -->
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-thermometer-half fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_temperature }} °C</b></div>
+                                            <div class="mini-card-info">Średnia temperatura</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-umbrella fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_rainfall }} mm</b></div>
+                                            <div class="mini-card-info">Średnie opady</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-droplet fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_moisture }} %</b></div>
+                                            <div class="mini-card-info">Średnia wilgotność</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-eyedropper fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_soil }}</b></div>
+                                            <div class="mini-card-info">Średnie pH</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    {% if pie_chart_html or avg_yield_chart_html %}
+                    {% if pie_chart_html %}
+                    <div class="w-50 p-2">
+                        <div style="width:100%;height:100%">
+                            {{ pie_chart_html|safe }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if avg_yield_chart_html %}
+                    <div class="w-50 p-2">
+                        <div style="width:100%;height:100%">
+                            {{ avg_yield_chart_html|safe }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <p>Brak danych do wygenerowania wykresu. Dodaj pomiary w zakładce "Moje uprawy".</p>
+                    {% endif %}
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-droplet me-2"></i>Wilgotność</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    {% for chart in moisture_bar_charts %}
+                            <div class="w-50 p-2">
+                                <div style="width:100%;height:100%">
+                                {{ chart|safe }}
+                                </div>
+                            </div>
+                    {% empty %}
+                    {% endfor %}
+                    {% for chart in moisture_line_charts %}
+                        <div class="w-50 p-2">
+                            <div style="width:100%;height:100%">
+                                {{ chart|safe }}
+                            </div>
+                        </div>
+                    {% empty %}
+                    <p>Brak danych do wygenerowania wykresu. Dodaj pomiary w zakładce "Moje uprawy".</p>
+                    {% endfor %}
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-droplet me-2"></i>Ph gleby</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    {% for chart in soil_ph_charts %}
+                        <div class="w-50 p-2">
+                            <div style="width:100%;height:100%">
+                                {{ chart|safe }}
+                            </div>
+                        </div>
+                    {% empty %}
+                    <p>Brak danych do wygenerowania wykresu. Dodaj pomiary w zakładce "Moje uprawy".</p>
+                    {% endfor %}
+                </li>
+            </ul>
+
+
+            <h2><i class="bi bi-thermometer-half me-2"></i>Temperatura</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item animate__animated animate__zoomIn">
+                    {% if temperature_charts %}
+                    {% for chart in temperature_charts %}
+                        <div>{{ chart|safe }}</div>
+                    {% endfor %}
+                    {% else %}
+                    <p>Brak danych do wygenerowania wykresu. Dodaj pomiary w zakładce "Pogoda".</p>
+                    {% endif %}
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-cloud-drizzle me-2"></i>Opady</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item animate__animated animate__zoomIn">
+                    {% if rainfall_charts %}
+                    {% for chart in rainfall_charts %}
+                        <div>{{ chart|safe }}</div>
+                    {% endfor %}
+                    {% else %}
+                    <p>Brak danych do wygenerowania wykresu. Dodaj pomiary w zakładce "Pogoda".</p>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+
+
+  <!-- MAIN CARD FOR PHONES -->
+  <main class="flex-grow-1">
+      <div class="main-content d-block d-md-none">
+        <div class="container-fluid main-card-stats">
+          <h1><i class="bi bi-bar-chart me-2 animate__animated animate__zoomIn"></i>Monitoring plonów</h1>
+            <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4" style="background-color: transparent; border: none;">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn" style="background-color: transparent; border: none;" >
+                    <div class="container-fluid">
+                        <div class="row g-3">
+
+                            <!-- FIRST ROW: 2 CARDS -->
+                            <div class="col-md-6">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-tree fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ total_area }} ha</b></div>
+                                            <div class="mini-card-info">Całkowita ilość upraw</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-flower1 fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ total_yields }} t</b></div>
+                                            <div class="mini-card-info">Całkowita ilość zebranych plonów</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECOND ROW: 3 CARDS -->
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-thermometer-half fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_temperature }} °C</b></div>
+                                            <div class="mini-card-info">Średnia temperatura</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-umbrella fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_rainfall }} mm</b></div>
+                                            <div class="mini-card-info">Średnie opady</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-droplet fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_moisture }} %</b></div>
+                                            <div class="mini-card-info">Średnia wilgotność</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card h-100 w-100 card-hover-effect">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-eyedropper fs-2 me-3"></i>
+                                        <div class="text-center">
+                                            <div class="stats-mini-card"><b>{{ avg_soil }}</b></div>
+                                            <div class="mini-card-info">Średnie pH</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- CHARTS -->
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    <div class="row g-3">
+                        <p><i class="bi bi-x-octagon me-2"></i>Wyświetlanie wykresów nie jest wspierane na urządzeniach mobilnych. Przełącz przeglądarkę na wersję dla komputerów.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-droplet me-2"></i>Wilgotność</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    <div class="row g-3">
+                        <p><i class="bi bi-x-octagon me-2"></i>Wyświetlanie wykresów nie jest wspierane na urządzeniach mobilnych. Przełącz przeglądarkę na wersję dla komputerów.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-droplet me-2"></i>Ph gleby</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex flex-wrap animate__animated animate__zoomIn">
+                    <div class="row g-3">
+                        <p><i class="bi bi-x-octagon me-2"></i>Wyświetlanie wykresów nie jest wspierane na urządzeniach mobilnych. Przełącz przeglądarkę na wersję dla komputerów.</p>
+                    </div>
+                </li>
+            </ul>
+
+
+            <h2><i class="bi bi-thermometer-half me-2"></i>Temperatura</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item animate__animated animate__zoomIn">
+                    <div class="row g-3">
+                        <p><i class="bi bi-x-octagon me-2"></i>Wyświetlanie wykresów nie jest wspierane na urządzeniach mobilnych. Przełącz przeglądarkę na wersję dla komputerów.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2><i class="bi bi-cloud-drizzle me-2"></i>Opady</h2>
+            <hr class="bg-success" style="height: 4px; border-radius: 4px;">
+            <ul class="list-group mb-4">
+                <li class="list-group-item animate__animated animate__zoomIn">
+                    <div class="row g-3">
+                        <p><i class="bi bi-x-octagon me-2"></i>Wyświetlanie wykresów nie jest wspierane na urządzeniach mobilnych. Przełącz przeglądarkę na wersję dla komputerów.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white text-center text-muted py-1 sticky-bottom">
+    &copy; 2025 Farmlyzer.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
+</html>

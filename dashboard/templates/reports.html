@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farmlyzer - raporty</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Style -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'favicon.svg' %}">
+</head>
+
+<body class="d-flex flex-column min-vh-100 animate__animated animate__fadeIn">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><img src="{% static 'logo_svg.svg' %}" alt="Farmlyzer Logo" width="25" height="25" class="me-2">Farmlyzer</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><i class="bi bi-box-arrow-left me-2"></i>Wyloguj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'user' %}"><i class="bi bi-person me-2"></i>{{ user.username }}</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}"><i class="bi bi-person-plus me-2"></i>Zarejestruj się</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right me-2"></i>Zaloguj się</a>
+              </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENU BUTTON FOR PHONES -->
+  <button class="btn btn-outline-secondary d-lg-none m-2"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarOffcanvas"
+        aria-controls="sidebarOffcanvas">
+        Menu
+  </button>
+
+  <!-- MIDDLE: SIDEBAR + CARD -->
+  <div class="flex-grow-1 d-flex">
+
+    <!-- SIDEBAR FOR DESKTOP-->
+    <aside class="sidebar bg-white shadow p-3 d-none d-lg-block">
+      <div class="d-grid gap-2">
+          <a href="{% url 'dashboard' %}" class="btn l-mn-btn"><i class="bi bi-house me-2"></i></i>Panel główny</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'stats' %}" class="btn l-mn-btn"><i class="bi bi-graph-up me-2"></i>Statystyki</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'crops' %}" class="btn l-mn-btn"><i class="bi bi-tree me-2"></i>Moje uprawy</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'weather' %}" class="btn l-mn-btn"><i class="bi bi-cloud-sun me-2"></i>Pogoda</a>
+          <hr class="bg-success my-1">
+          <a href="{% url 'reports' %}" class="btn l-mn-btn"><i class="bi bi-file-bar-graph me-2"></i>Raporty</a>
+          <hr class="bg-success my-1">
+      </div>
+    </aside>
+
+      <!-- SIDEBAR FOR PHONES -->
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
+          <div class="offcanvas-header">
+              <h5 class="offcanvas-title">Menu</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+          </div>
+          <div class="offcanvas-body">
+              <div class="d-grid gap-2">
+                  <a href="{% url 'dashboard' %}" class="btn l-mn-btn"><i class="bi bi-house me-2"></i>Panel główny</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'stats' %}" class="btn l-mn-btn"><i class="bi bi-graph-up me-2"></i>Statystyki</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'crops' %}" class="btn l-mn-btn"><i class="bi bi-tree me-2"></i>Moje uprawy</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'weather' %}" class="btn l-mn-btn"><i class="bi bi-cloud-sun me-2"></i>Pogoda</a>
+                  <hr class="bg-success my-1">
+                  <a href="{% url 'reports' %}" class="btn l-mn-btn"><i class="bi bi-file-bar-graph me-2"></i>Raporty</a>
+              </div>
+          </div>
+      </div>
+
+      <!-- MAIN CARD FOR DESKTOP -->
+      <main class="flex-grow-1">
+          <div class="main-content animate__animated animate__zoomIn d-none d-md-block">
+              <div class="container-fluid main-card-medium">
+                  <h2 class="animate__animated animate__zoomIn"><i class="bi bi-file-bar-graph me-2"></i>Raporty</h2>
+                  <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+                 {% block content %}
+                    <div class="container mt-4 animate__animated animate__zoomIn">
+                      <h3>Generuj raport</h3>
+                      <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          {{ form.crop.label_tag }}
+                          {{ form.crop }}
+                        </div>
+                        <h5>Wybierz dane do raportu:</h5>
+                        <div class="form-check">
+                          {{ form.include_treatments }} {{ form.include_treatments.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_moisture }} {{ form.include_moisture.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_soil_ph }} {{ form.include_soil_ph.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_temperature }} {{ form.include_temperature.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_rainfall }} {{ form.include_rainfall.label_tag }}
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-file-earmark-plus me-2"></i>Generuj raport</button>
+                      </form>
+                    </div>
+              </div>
+          </div>
+      </main>
+  </div>
+
+
+  <!-- MAIN CARD FOR PHONES -->
+      <main class="flex-grow-1">
+          <div class="main-content animate__animated animate__zoomIn d-block d-md-none">
+              <div class="container-fluid main-card animate__animated animate__zoomIn">
+                  <h2><i class="bi bi-file-bar-graph me-2"></i>Raporty</h2>
+                  <hr class="bg-success animate__animated animate__zoomIn" style="height: 4px; border-radius: 4px;">
+                    <div class="container mt-4 animate__animated animate__zoomIn">
+                      <h3>Generuj raport</h3>
+                      <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          {{ form.crop.label_tag }}
+                          {{ form.crop }}
+                        </div>
+                        <h5>Wybierz dane do raportu:</h5>
+                        <div class="form-check">
+                          {{ form.include_treatments }} {{ form.include_treatments.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_moisture }} {{ form.include_moisture.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_soil_ph }} {{ form.include_soil_ph.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_temperature }} {{ form.include_temperature.label_tag }}
+                        </div>
+                        <div class="form-check">
+                          {{ form.include_rainfall }} {{ form.include_rainfall.label_tag }}
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-file-earmark-plus me-2"></i>Generuj raport</button>
+                      </form>
+                    </div>
+                    {% endblock %}
+              </div>
+          </div>
+      </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white text-center text-muted py-1 sticky-bottom">
+    &copy; 2025 Farmlyzer.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
+</html>
